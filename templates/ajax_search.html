@@ -1,0 +1,7 @@
+{% if article.count > 0 %}
+{% for article in articles %}
+ <li><a href="">{{ article.title }}</a></li>
+{% endfor %}
+{% else %}
+<li>none</li>
+{% endif %}

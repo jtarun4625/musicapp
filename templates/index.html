@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8"/>
+    <title>MUSIC APP </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/css/base.css">
+    <script type="text/javascript" src="{% static "js/jquery-1.10.2.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#search").keyup(function (e) {
+                var search = $("#search").val()
+                var api = "http://127.0.0.1:8000/music/search/" + search + "/";
+                $.getJSON(api, {})
+                        .done(function (data) {
+                            $.each(data, function (i, item) {
+                                document.getElementById("livesearch").innerHTML = " <a href=details/"+item.id+">"+item.track_name+"</a>";
+                                document.getElementById("livesearch").style.border = "1px solid #A5ACB2";
+                            });
+                        });
+            });
+        });
+    </script>
+</head>
+<body>
+
+
+<!-- Rating - START -->
+<div class="container">
+
+    <div class="page-header">
+        <h1>
+            <small>
+                <center>MUSIC APP</center>
+            </small>
+        </h1>
+    </div>
+
+    <div class="container" id="container1">
+        <div class="col-md-2"></div>
+
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="text-center">
+                        <form method="GET" action="">
+                            <input type="text" name="search" placeholder=" Search Title" id="search"
+                                   style="border-radius: 5px; width: 80%; height: 30px;">
+
+                            <input type="submit" value="Search">
+                            <ul id="search-results">
+
+                            </ul>
+                            </button>
+
+                        </form>
+                        <div id="livesearch"></div>
+
+                    </h4>
+                </div>
+            </div>
+            <div class="panel-body text-center">
+
+                <strong></strong>
+
+            </div>
+
+            <ul class="list-group list-group-flush">
+                {% for obj in object_list %}
+                    <li class="list-group-item" style="height:50px">
+                        <div class="skillLineDefault">
+                            <div class="skill pull-left">
+                                <a href='{% url "Trackdetail" id=obj.id %}'>{{ obj.track_name }}[{{ obj.track_genre }}]</a>
+                            <span class="pull-right" style="color: #000000;" value="">{{ obj.track_rating }}
+
+                                </br></div>
+                            <div class="rating" id="rate1"></div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <div class="panel-footer text-center">
+                <center>
+                    <a href="/music/createtrack">
+                        <button type="button" class="btn btn-primary btn-lg btn-block" style="width: 40%;">
+                            Add New Track
+                        </button>
+                    </a>
+                </center>
+
+            </div>
+            <div class="pagination">
+    <span class="step-links">
+        {% if object_list.has_previous %}
+            <a href="?page={{ object_list.previous_page_number }}&q={{ request.GET.q }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+        </span>
+
+        {% if object_list.has_next %}
+            <a href="?page={{ object_list.next_page_number }}&q={{ request.GET.q }}">next</a>
+        {% endif %}
+    </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+
+    .rating {
+        margin-left: 30px;
+    }
+
+    div.skill {
+
+        border-radius: 3px;
+        color: white;
+        font-weight: bold;
+        padding: 3px 4px;
+        width: 65%;
+    }
+
+    .skillLine {
+        display: inline-block;
+        width: 100%;
+        min-height: 90px;
+        padding: 0px 4px;
+    }
+
+    .skillLineDefault {
+        padding: 3px 4px;
+    }
+
+</style>
+
+<!-- you need to include the shieldui css and js assets in order for the charts to work -->
+<link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light/all.min.css"/>
+
+
+<!-- Rating - END -->
+
+</div>
+
+</body>
+</html>
+
